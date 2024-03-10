@@ -3,7 +3,7 @@ import { randomBytes } from "crypto";
 import { WALLET_FACTORY_ABI } from "../utils/abi";
 
 const walletFactoryContract = () => {
-  const bundlerProvider = new ethers.JsonRpcProvider("bundler_url"); // to be added
+  const bundlerProvider = new ethers.providers.JsonRpcProvider("bundler_url"); // to be added
   const walletFactoryContractInstance = new ethers.Contract(
     "0xe8A95711Bc29b33d68535585071c69C37BDc3B54", // need to change it to sepolia
     WALLET_FACTORY_ABI,
@@ -28,11 +28,9 @@ const getWalletAddress = async (owners: Array<string>, salt: string) => {
 const createAccount = async (
   address: string[],
   privateKey: string,
-  chain: string,
-  env: string
 ) => {
-  const provider = new ethers.JsonRpcProvider("rpc_url"); // to be added
-  let owners: string[] = [];
+  const provider = new ethers.providers.JsonRpcProvider("rpc_url"); // to be added
+  let owners: string[] = []; 
   let salt: string;
   const signer = new Wallet(privateKey, provider); // need this to connect to metamask
 
