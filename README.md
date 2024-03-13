@@ -1,5 +1,9 @@
 # ethMumbai
 
+## RUN 
+
+`cd client-new` --> 
+`npm run dev`
 
 ## Keshav Todos 
 
