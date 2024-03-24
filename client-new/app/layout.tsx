@@ -7,6 +7,7 @@ import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { AccountContext } from "../context/context";
 import Navbar from "@/components/Navbar";
+import { useRouter } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,6 +18,7 @@ export default function RootLayout({
 }) {
   /* create local state to save account information after signin */
   const [account, setAccount] = useState<String>("");
+  const router = useRouter();
 
   /* web3Modal configuration for enabling wallet access */
   async function getWeb3Modal() {
@@ -39,12 +41,10 @@ export default function RootLayout({
     try {
       const web3Modal = await getWeb3Modal();
       const connection = await web3Modal.connect();
-      console.log("connection:", connection);
       const provider = new ethers.BrowserProvider(window.ethereum);
       const accounts = await provider.listAccounts()
-      console.log("accounts:", accounts);
       setAccount(accounts[0].address)
-      localStorage.setItem('isWalletConnected', 'true');
+      router.push("/signup")
     } catch (err) {
       console.log("error:", err);
     }
