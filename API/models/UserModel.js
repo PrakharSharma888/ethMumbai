@@ -9,7 +9,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    walletAddress: {
+    eoa: {
+        type: String,
+        required: true
+    },
+    smartWalletAddress: {
         type: String,
         required: true
     }
