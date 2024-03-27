@@ -7,7 +7,7 @@ const ContractInteraction = () => {
 
 
   return (
-    <div className='p-5 flex flex-col justify-around h-[90vh]'>
+    <div className='p-5 flex flex-col justify-around h-[90vh] gap-5'>
       {/* ID : {id} */}
 
 

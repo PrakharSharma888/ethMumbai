@@ -1,8 +1,9 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-
+import { Link, useNavigate } from 'react-router-dom'
+import { useContext } from 'react';
+import UserContext from '../context/userContext.js';
 
 const TemplateData = [
   {
@@ -37,6 +38,8 @@ const TemplateData = [
   },
 ]
 const Dashboard = () => {
+  const {user, eoa} = useContext(UserContext)
+  const navigate = useNavigate()
   const [showTemplate, setShowTemplate] = useState("new-template");
   const [templates, setTemplates] = useState([])
 
@@ -51,7 +54,6 @@ const Dashboard = () => {
   useEffect(() => {
     axios.get("http://localhost:8080/template/getAll")
       .then((res) => {
-        console.log(res.data)
         setTemplates(res.data.allTemplates)
       })
       .catch((err) => {
@@ -59,7 +61,12 @@ const Dashboard = () => {
       })
   }, [])
 
-  console.log(templates)
+  console.log(user)
+
+
+  if(!eoa){
+    navigate('/')
+  }
 
   return (
     <div className="h-full w-screen text-black p-10 flex flex-col gap-10">
