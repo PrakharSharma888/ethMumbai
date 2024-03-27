@@ -3,7 +3,7 @@ import UserContext from "./userContext";
 import axios from "axios";
 
 const UserContextProvider = ({children}) => {
-  const [user, setUser] = useState({})
+  const [user, setUser] = useState()
   const [eoa, setEoa] = useState('')
 
   console.log("UserContextProvider user:", user);
@@ -25,7 +25,7 @@ const UserContextProvider = ({children}) => {
   }, []);
 
   const LogOut = () =>{
-    setUser({})
+    setUser(null)
   }
 
   return(

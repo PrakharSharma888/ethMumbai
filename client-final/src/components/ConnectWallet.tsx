@@ -33,17 +33,13 @@ const ConnectWallet = () => {
                 const res = await axios.post('http://localhost:8080/api/loginUser', {
                     eoa: accounts[0]
                 });
-
-                console.log('HEre')
-
-                console.log('res:', res);
-                // setUser(res.data.user);
+                setUser(res.data.user);
 
                 if (res.data.status == 400) {
                     toast.success('User Not Found, Please Signup first'); // Not working ??
                     setTimeout(() => {
                         navigate('/signup', { state: { eoa: accounts[0] } });
-                    }, 1000);
+                    }, 500);
                 }
 
                 if (res.data.status == 200) {

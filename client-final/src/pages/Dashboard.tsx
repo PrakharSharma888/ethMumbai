@@ -71,6 +71,11 @@ const Dashboard = () => {
   return (
     <div className="h-full w-screen text-black p-10 flex flex-col gap-10">
       <div className="border-[1px] py-5 px-10 rounded-2xl border-gray-700 h-full flex gap-10 flex-col justify-between">
+        {
+          user && (
+            <span> Hi {user.name}</span>
+          )
+        }
         <div className="inline-flex">
           {/* TODO: Functionality lgani h  */}
           <div className="p-1 border-gray-500 flex border-[1px] gap-2 rounded-md">
