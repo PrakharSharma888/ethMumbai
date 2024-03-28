@@ -10,35 +10,41 @@ const TemplateData = [
     id: 1,
     name: "Token",
     description: "Generate a ethereum custom token",
+    url: 'createContract/token'
   },
   {
     id: 2,
     name: "NFT",
     description: "Generate a ethereum custom NFT",
+    url: 'createContract/nft'
   },
   {
     id: 3,
     name: "Staking",
     description: "Generate a ethereum custom NFT",
+    url: 'createContract/staking'
   },
   {
     id: 4,
     name: "Farm",
     description: "Generate a ethereum custom NFT",
+    url: 'createContract/farm'
   },
   {
     id: 5,
     name: "Marketplace",
     description: "Generate a ethereum custom NFT",
+    url: 'createContract/marketplace'
   },
   {
     id: 6,
     name: "Launchpad",
     description: "Generate a ethereum custom NFT",
+    url: 'createContract/launchpad'
   },
 ]
 const Dashboard = () => {
-  const {user, eoa} = useContext(UserContext)
+  const { user, eoa } = useContext(UserContext)
   const navigate = useNavigate()
   const [showTemplate, setShowTemplate] = useState("new-template");
   const [templates, setTemplates] = useState([])
@@ -64,7 +70,7 @@ const Dashboard = () => {
   console.log(user)
 
 
-  if(!eoa){
+  if (!eoa) {
     navigate('/')
   }
 
@@ -142,17 +148,19 @@ const Dashboard = () => {
                       className="flex flex-col gap-3 justify-centerc items-center py-10 border-[0.5px] bg-white text-black border-gray-400 rounded-2xl min-w-36 min-h-32"
                       key={data.id}
                     >
-                      <div>
-                        <div className='bg-red-100 h-20 w-20'> Icon </div>
-                      </div>
-                      <div className="flex flex-col justify-center text-center">
-                        <span className="text-xl font-semibold">
-                          {data.name}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {data.description}
-                        </span>
-                      </div>
+                      <Link to={data.url}>
+                        <div>
+                          <div className='bg-red-100 h-20 w-20'> Icon </div>
+                        </div>
+                        <div className="flex flex-col justify-center text-center">
+                          <span className="text-xl font-semibold">
+                            {data.name}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {data.description}
+                          </span>
+                        </div>
+                      </Link>
                     </div>
                   );
                 })}
@@ -167,7 +175,7 @@ const Dashboard = () => {
                 return (
                   <div className="flex flex-col gap-3 justify-centerc items-center py-10 border-[0.5px] bg-white text-black border-gray-400 rounded-2xl">
                     <div className='flex justify-center'>
-                      <img src='https://thumbor.forbes.com/thumbor/fit-in/x/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg' alt='err' className=''/>
+                      <img src='https://thumbor.forbes.com/thumbor/fit-in/x/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg' alt='err' className='' />
                     </div>
                     <div className="flex flex-col justify-center text-center">
                       <span className="text-xl font-semibold">
