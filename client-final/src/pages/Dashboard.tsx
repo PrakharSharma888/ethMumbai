@@ -4,43 +4,50 @@ import axios from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import { useContext } from 'react';
 import UserContext from '../context/userContext.js';
+import { Gem } from 'lucide-react';
 
 const TemplateData = [
   {
     id: 1,
     name: "Token",
     description: "Generate a ethereum custom token",
-    url: 'create/token'
+    url: 'create/token',
+    icon: <Gem size={60} strokeWidth={1} />
   },
   {
     id: 2,
     name: "NFT",
     description: "Generate a ethereum custom NFT",
-    url: 'create/nft'
+    url: 'create/nft',
+    icon: <Gem size={60} strokeWidth={1} />
   },
   {
     id: 3,
     name: "Staking",
     description: "Generate a ethereum custom NFT",
-    url: 'create/staking'
+    url: 'create/staking',
+    icon: <Gem size={60} strokeWidth={1} />
   },
   {
     id: 4,
     name: "Farm",
     description: "Generate a ethereum custom NFT",
-    url: 'create/farm'
+    url: 'create/farm',
+    icon: <Gem size={60} strokeWidth={1} />
   },
   {
     id: 5,
     name: "Marketplace",
     description: "Generate a ethereum custom NFT",
-    url: 'create/marketplace'
+    url: 'create/marketplace',
+    icon: <Gem size={60} strokeWidth={1} />
   },
   {
     id: 6,
     name: "Launchpad",
     description: "Generate a ethereum custom NFT",
-    url: 'create/launchpad'
+    url: 'create/launchpad',
+    icon: <Gem size={60} strokeWidth={1} />
   },
 ]
 const Dashboard = () => {
@@ -75,7 +82,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="h-full w-screen text-black p-10 flex flex-col gap-10 mt-14">
+    <div className="h-full w-screen text-white bg-black p-10 flex flex-col gap-10 mt-14">
       <div className="border-[1px] py-5 px-10 rounded-2xl border-gray-700 h-full flex gap-10 flex-col justify-between">
         {
           user && (
@@ -88,7 +95,7 @@ const Dashboard = () => {
             <div
               className={
                 showTemplate === "new-template"
-                  ? "bg-black text-white px-2 rounded-sm cursor-pointer"
+                  ? "bg-white text-black px-2 rounded-sm cursor-pointer"
                   : "cursor-pointer"
               }
               onClick={toggleTemplate}
@@ -98,7 +105,7 @@ const Dashboard = () => {
             <div
               className={
                 showTemplate === "already-created-template"
-                  ? "bg-black text-white px-2 rounded-sm cursor-pointer"
+                  ? "bg-white text-black px-2 rounded-sm cursor-pointer"
                   : "cursor-pointer"
               }
               onClick={toggleTemplate}
@@ -145,12 +152,12 @@ const Dashboard = () => {
                 {TemplateData.map((data) => {
                   return (
                     <div
-                      className="flex flex-col gap-3 justify-centerc items-center py-10 border-[0.5px] bg-white text-black border-gray-400 rounded-2xl min-w-36 min-h-32"
+                      className="flex flex-col gap-3 justify-centerc items-center py-10 border-[0.5px] bg-black text-white border-gray-400 rounded-2xl min-w-36 min-h-32"
                       key={data.id}
                     >
                       <Link to={data.url}>
-                        <div>
-                          <div className='bg-red-100 h-20 w-20'> Icon </div>
+                        <div className='w-full flex justify-center items-center'>
+                          <div className='Gemh-20 w-20 flex justify-center items-center'> {data.icon} </div>
                         </div>
                         <div className="flex flex-col justify-center text-center">
                           <span className="text-xl font-semibold">

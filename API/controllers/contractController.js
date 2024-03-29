@@ -1,4 +1,5 @@
 const Contract = require('../models/contractModel');
+const MusicNFTContract = require('../models/MusicNFTContract');
 
 const TestContract = async (req, res) => {
     res.status(200).json({ message: "Contract Controller Works" });
@@ -11,6 +12,15 @@ const createContract = async (req, res) => {
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
+}
+
+const CreateMusicNFTContract = async (req, res) => {
+    try {
+        const {trackName, artistName, albumName, genre, year, userId} = req.body;
+        res.status(201).json({ trackName, artistName, albumName, genre, year, userId });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    } 
 }
 
 const getContracts = async (req, res) => {
@@ -34,4 +44,4 @@ const SingleContract = async (req, res) => {
     }
 }
 
-module.exports = {createContract, TestContract, SingleContract, getContracts}
+module.exports = {createContract, TestContract, SingleContract, getContracts, CreateMusicNFTContract}

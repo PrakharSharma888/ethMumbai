@@ -15,12 +15,12 @@ const CreateContract = () => {
 
 
     return (
-        <div>
-            <div>
+        <div className='flex justify-center bg-black h-screen items-center'>
+            {/* <div>
                 CreateContract : {type}
-            </div>
+            </div> */}
 
-            <div>
+            <div className='w-1/2'>
                 {componentToRender}
             </div>
         </div>

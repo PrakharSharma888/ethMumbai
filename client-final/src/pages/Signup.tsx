@@ -6,6 +6,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 import { useContext } from 'react';
 import UserContext from '../context/userContext.js';
+import { ethers } from "ethers";
+import { WALLET_FACTORY_ABI } from '../../../blockchain/utils/abi.js';
 
 
 export default function Signup() {
@@ -13,12 +15,59 @@ export default function Signup() {
 
   const navigate = useNavigate();
 
-  const {eoa, setUser} = useContext(UserContext)
+  const {eoa, setUser, signer} = useContext(UserContext)
 
   console.log('walletAddress:', eoa);
 
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
+
+  function generateSalt() {
+    const buffer = new Uint8Array(32); // 32 bytes for salt
+    window.crypto.getRandomValues(buffer);
+    const hexString = buffer.reduce((acc, byte) => acc + byte.toString(16).padStart(2, '0'), '');
+    return '0x' + hexString;
+  }
+
+  const walletFactoryContract = () => {
+    const bundlerProvider = new ethers.providers.JsonRpcProvider("https://api.stackup.sh/v1/node/88ea134e5270ba36996bbae58c714b510c4619da6f8aeda8f5b1657c16dc8995"); // still mumbai
+    const walletFactoryContractInstance = new ethers.Contract(
+      "0xe8A95711Bc29b33d68535585071c69C37BDc3B54", // need to change it to sepolia
+      WALLET_FACTORY_ABI,
+      bundlerProvider
+    );
+    return walletFactoryContractInstance;
+  };
+
+  const getWalletAddress = async (owners: Array<string>, salt: string) => {
+    try {
+      const walletFactoryContractInst = walletFactoryContract();
+      const walletAddress = await walletFactoryContractInst.getAddress(owners, salt);
+      return walletAddress;
+    } catch (error: any) {
+      return {
+        code: 0,
+        error: error.message,
+      };
+    }
+  };
+
+  const createAccountAddress = async (
+  ) => {
+    const address = ["0x5FbDB2315678afecb367f032d93F642f64180aa3"]; // to be added
+    let owners: string[] = []; 
+    let salt: string;
+  
+    owners.push(...address);
+    salt = generateSalt()
+    console.log("Salt: ",salt);
+    const walletFactoryContractInst = walletFactoryContract();
+    const smartWalletAddress = await walletFactoryContractInst.connect(signer).createAccount(owners,salt); 
+    await smartWalletAddress.wait();
+    const walletAddress = await getWalletAddress(owners, salt);
+    console.log("My addresssssesss",walletAddress);
+    // addresss
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -99,6 +148,7 @@ export default function Signup() {
           <div>
             <button
               type="submit"
+              onClick={createAccountAddress}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Sign Up
