@@ -1,15 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ERC721_CONTRACT_ABI,
   ERC721_CONTRACT_BYTECODE,
 } from "../../../../blockchain/utils/abi";
 import { ethers } from "ethers";
+import { useContext } from "react";
+import UserContext from "../../context/userContext";
 
 const NFT = () => {
   const [tokenName, setTokenName] = useState("");
   const [tokenSymbol, setTokenSymbol] = useState("");
   const [loading, setLoading] = useState(false);
+  const { signer } = useContext(UserContext);
+
+  useEffect(() => {
+    const getAcc = async () => {
+      try {
+        if (signer) {
+          const address = await signer.getAddress();
+          console.log("User Address:", address);
+        } else {
+          console.error("Signer not available.");
+        }
+      } catch (error) {
+        console.error("Error fetching user address:", error);
+      }
+    };
+
+    getAcc();
+  }, [signer]);
   const route = useNavigate();
 
   const handleDeploy = async () => {
