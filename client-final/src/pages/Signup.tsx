@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from 'react';
 import UserContext from '../context/userContext.js';
 import { ethers } from "ethers";
-import { WALLET_FACTORY_ABI } from '../../../blockchain/utils/abi.js';
+import { WALLET_FACTORY_ABI } from "../../../blockchain/utils/abi.js";
 
 
 export default function Signup() {
@@ -15,12 +15,13 @@ export default function Signup() {
 
   const navigate = useNavigate();
 
-  const {eoa, setUser, signer} = useContext(UserContext)
+  const { eoa, setUser, signer } = useContext(UserContext)
 
   console.log('walletAddress:', eoa);
 
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
+  const [smartWalletAddress, setSmartWalletAddress] = useState("");
 
   function generateSalt() {
     const buffer = new Uint8Array(32); // 32 bytes for salt
@@ -55,17 +56,18 @@ export default function Signup() {
   const createAccountAddress = async (
   ) => {
     const address = ["0x5FbDB2315678afecb367f032d93F642f64180aa3"]; // to be added
-    let owners: string[] = []; 
+    let owners: string[] = [];
     let salt: string;
-  
+
     owners.push(...address);
     salt = generateSalt()
-    console.log("Salt: ",salt);
+    console.log("Salt: ", salt);
     const walletFactoryContractInst = walletFactoryContract();
-    const smartWalletAddress = await walletFactoryContractInst.connect(signer).createAccount(owners,salt); 
+    const smartWalletAddress = await walletFactoryContractInst.connect(signer).createAccount(owners, salt);
     await smartWalletAddress.wait();
     const walletAddress = await getWalletAddress(owners, salt);
-    console.log("My addresssssesss",walletAddress);
+    console.log("My addresssssesss", walletAddress);
+    setSmartWalletAddress(walletAddress);
     // addresss
   };
 
@@ -76,7 +78,7 @@ export default function Signup() {
       name: userName,
       email: email,
       eoa,
-      smartWalletAddress: "0x"
+      smartWalletAddress: smartWalletAddress
     })
       .then((res) => {
         console.log(res.data);
@@ -84,7 +86,7 @@ export default function Signup() {
         Cookies.set('token', token);
         toast.success('User created successfully');
         setUser(res.data.user)
-        setTimeout(() => { 
+        setTimeout(() => {
           navigate('/dashboard');
         }, 2000);
       })
@@ -93,11 +95,11 @@ export default function Signup() {
       });
   };
 
-  if(!eoa) {
-    return(
+  if (!eoa) {
+    return (
       <div>
         You are Not Registered
-        <button onClick={()=>navigate('/signup')}> Click Here </button>
+        <button onClick={() => navigate('/signup')}> Click Here </button>
       </div>
     )
   }
@@ -145,15 +147,25 @@ export default function Signup() {
               />
             </div>
           </div>
-          <div>
-            <button
-              type="submit"
-              onClick={createAccountAddress}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Sign Up
-            </button>
-          </div>
+          {
+            smartWalletAddress ? (<div>
+              <button
+                type="submit"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Sign Up
+              </button>
+            </div>) : (
+                <div>
+                <button
+                  onClick={createAccountAddress}
+                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Generate Smart wallet address
+                </button>
+              </div>
+            )
+          }
         </form>
       </div>
     </div>
