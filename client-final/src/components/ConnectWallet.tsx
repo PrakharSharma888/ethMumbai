@@ -22,24 +22,26 @@ const ConnectWallet = () => {
     const connectWallet = async () => {
         if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
             try {
-                const accounts = await window.ethereum.request({
-                    method: "eth_requestAccounts",
-                });
-
+                const provider = new ethers.providers.Web3Provider(window.ethereum)
+                
+                await provider.send("eth_requestAccounts", []);
+                const signer = provider.getSigner();
+                const address = await signer.getAddress();
+                console.log("Provider --", address);
                 // console.log('accounts:', accounts[0]);
-                setEoa(accounts[0]);
+                setEoa(address);
                 // localStorage.setItem('eoa', accounts[0]);
 
 
                 const res = await axios.post('http://localhost:8080/api/loginUser', {
-                    eoa: accounts[0]
+                    eoa: address
                 });
                 setUser(res.data.user);
 
                 if (res.data.status == 400) {
                     toast.success('User Not Found, Please Signup first'); // Not working ??
                     setTimeout(() => {
-                        navigate('/signup', { state: { eoa: accounts[0] } });
+                        navigate('/signup', { state: { eoa: address } });
                     }, 500);
                 }
 
