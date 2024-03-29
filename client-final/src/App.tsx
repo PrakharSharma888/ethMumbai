@@ -12,14 +12,16 @@ function App() {
 
   return (
     <BrowserRouter>
-    <Navbar/>
+      <div className='fixed top-0 w-full '>
+        <Navbar />
+      </div>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/login' element={<Login />} />
         <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/contract/:id' element={<ContractInteraction/>}/>
-        <Route path='dashboard/createContract/:type' element={<CreateContract/>}/>
+        <Route path='/contract/:id' element={<ContractInteraction />} />
+        <Route path='dashboard/create/:type' element={<CreateContract />} />
       </Routes>
     </BrowserRouter>
   )

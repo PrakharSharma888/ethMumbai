@@ -8,6 +8,7 @@ import ConnectWallet from './ConnectWallet';
 import { useContext } from 'react';
 import UserContext from '../context/userContext.js';
 import toast, { Toaster } from 'react-hot-toast';
+import Logo from '../assets/main_logo.png'
 
 
 declare global {
@@ -40,7 +41,7 @@ const Navbar = () => {
     return (
         <div className='flex justify-between px-10 py-4 shadow-md items-center'>
             <Link to={'/'}>
-                Keshav Malik
+                <img src={Logo} alt='logo' className='h-8' />
             </Link>
 
             {

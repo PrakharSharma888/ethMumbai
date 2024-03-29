@@ -10,37 +10,37 @@ const TemplateData = [
     id: 1,
     name: "Token",
     description: "Generate a ethereum custom token",
-    url: 'createContract/token'
+    url: 'create/token'
   },
   {
     id: 2,
     name: "NFT",
     description: "Generate a ethereum custom NFT",
-    url: 'createContract/nft'
+    url: 'create/nft'
   },
   {
     id: 3,
     name: "Staking",
     description: "Generate a ethereum custom NFT",
-    url: 'createContract/staking'
+    url: 'create/staking'
   },
   {
     id: 4,
     name: "Farm",
     description: "Generate a ethereum custom NFT",
-    url: 'createContract/farm'
+    url: 'create/farm'
   },
   {
     id: 5,
     name: "Marketplace",
     description: "Generate a ethereum custom NFT",
-    url: 'createContract/marketplace'
+    url: 'create/marketplace'
   },
   {
     id: 6,
     name: "Launchpad",
     description: "Generate a ethereum custom NFT",
-    url: 'createContract/launchpad'
+    url: 'create/launchpad'
   },
 ]
 const Dashboard = () => {
@@ -75,7 +75,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="h-full w-screen text-black p-10 flex flex-col gap-10">
+    <div className="h-full w-screen text-black p-10 flex flex-col gap-10 mt-14">
       <div className="border-[1px] py-5 px-10 rounded-2xl border-gray-700 h-full flex gap-10 flex-col justify-between">
         {
           user && (

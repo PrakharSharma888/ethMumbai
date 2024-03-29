@@ -7,6 +7,7 @@ const cors = require('cors')
 const router  = require('./routes/userRoutes')
 const TemplateRouter = require('./routes/templateRoutes')
 const cookieParser = require('cookie-parser')
+const contractRouter = require('./routes/contractRoutes')
 
 app.use(cors());
 app.use(cookieParser())
@@ -17,6 +18,7 @@ ConnectToDB()
 
 app.use('/api', router)
 app.use('/template', TemplateRouter)
+app.use('/contract', contractRouter)
 
 app.listen(PORT, () => {
     console.log(`Listenign @ ${PORT}`)

@@ -7,6 +7,7 @@ import axios from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
 import { useContext } from 'react';
 import UserContext from '../context/userContext.js';
+import { WalletMinimal } from 'lucide-react';
 
 
 
@@ -15,8 +16,8 @@ const ConnectWallet = () => {
 
     const navigate = useNavigate();
 
-    const {eoa, setEoa} = useContext(UserContext)
-    const {user, setUser} = useContext(UserContext)
+    const { eoa, setEoa } = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext)
 
     const connectWallet = async () => {
         if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
@@ -65,7 +66,10 @@ const ConnectWallet = () => {
         <div>
             <Toaster />
 
-            <button onClick={connectWallet}>Connect Wallet</button>
+            <button onClick={connectWallet} className='bg-white border-[1px] border-white p-2 rounded-lg flex gap-2'>
+                <WalletMinimal />
+                <span> Connect Wallet </span>
+            </button>
 
             {/* {eoa ? (
                 <div>
