@@ -29,7 +29,7 @@ const ConnectWallet = () => {
                 const signer = provider.getSigner();
                 setSigner(signer)
                 const address = await signer.getAddress();
-                console.log("Provider --", address);
+                // console.log("Provider --", address);
                 // console.log('accounts:', accounts[0]);
                 setEoa(address);
                 // localStorage.setItem('eoa', accounts[0]);

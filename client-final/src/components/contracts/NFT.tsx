@@ -34,24 +34,16 @@ const NFT = () => {
 
   const handleDeploy = async () => {
     setLoading(true);
-    // const provider = new ethers.providers.JsonRpcProvider(window.ethereum)
-    // console.log("Provider --", provider);
-    // await provider.send("eth_requestAccounts", []);
-    // const signer = provider.getSigner();
-    // const factory = new ethers.ContractFactory(
-    //   ERC721_CONTRACT_ABI,
-    //   ERC721_CONTRACT_BYTECODE,
-    //   signer
-    // );
-    // const contract = await factory.deploy(tokenName, tokenSymbol);
-    // contract.deploymentTransaction()?.wait();
-    // console.log(contract);
-
-    setTimeout(() => {
-      setLoading(false);
-
-      route("/contract/demo");
-    }, 2000);
+    const factory = new ethers.ContractFactory(
+      ERC721_CONTRACT_ABI,
+      ERC721_CONTRACT_BYTECODE,
+      signer
+    );
+    const contract = await factory.deploy(tokenName, tokenSymbol);
+    contract.deployed();
+    console.log("Contract:",contract);
+    setLoading(false);
+    route("/contract/demo");
   };
 
   return (
