@@ -16,8 +16,9 @@ const ConnectWallet = () => {
 
     const navigate = useNavigate();
 
-    const { eoa, setEoa } = useContext(UserContext)
+    const { eoa, setEoa, setSigner } = useContext(UserContext)
     const { user, setUser } = useContext(UserContext)
+
 
     const connectWallet = async () => {
         if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
@@ -26,6 +27,7 @@ const ConnectWallet = () => {
                 
                 await provider.send("eth_requestAccounts", []);
                 const signer = provider.getSigner();
+                setSigner(signer)
                 const address = await signer.getAddress();
                 console.log("Provider --", address);
                 // console.log('accounts:', accounts[0]);

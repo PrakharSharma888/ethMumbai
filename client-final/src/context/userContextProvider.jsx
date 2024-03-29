@@ -5,6 +5,7 @@ import axios from "axios";
 const UserContextProvider = ({children}) => {
   const [user, setUser] = useState()
   const [eoa, setEoa] = useState('')
+  const [signer, setSigner] = useState(null)
 
   console.log("UserContextProvider user:", user);
 
@@ -29,7 +30,7 @@ const UserContextProvider = ({children}) => {
   }
 
   return(
-    <UserContext.Provider value={{user, setUser, eoa, setEoa,LogOut}}>
+    <UserContext.Provider value={{user, setUser, eoa, setEoa,LogOut, setSigner, signer}}>
       {children}
     </UserContext.Provider>
   )
