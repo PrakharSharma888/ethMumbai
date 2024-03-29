@@ -4,15 +4,18 @@ import axios from "axios";
 import Cookies from 'js-cookie';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
+import { useContext } from 'react';
+import UserContext from '../context/userContext.js';
 
 
 export default function Signup() {
   const location = useLocation();
+
   const navigate = useNavigate();
 
-  const walletAddress = location.state.walletAddress || "";
+  const {eoa, setUser} = useContext(UserContext)
 
-  console.log('walletAddress:', walletAddress);
+  console.log('walletAddress:', eoa);
 
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,25 +26,41 @@ export default function Signup() {
     axios.post("http://localhost:8080/api/createUser", {
       name: userName,
       email: email,
-      eoa: walletAddress,
+      eoa,
       smartWalletAddress: "0x"
     })
       .then((res) => {
         console.log(res.data);
         const token = res.data.token;
         Cookies.set('token', token);
-        navigate('/dashboard');
         toast.success('User created successfully');
+        setUser(res.data.user)
+        setTimeout(() => { 
+          navigate('/dashboard');
+        }, 2000);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  if(!eoa) {
+    return(
+      <div>
+        You are Not Registered
+        <button onClick={()=>navigate('/signup')}> Click Here </button>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Toaster />
       <div className="max-w-md w-full space-y-8">
+
+        <div>
+          You are not registered, please register here
+        </div>
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign Up</h2>
         </div>
@@ -71,10 +90,9 @@ export default function Signup() {
               <label htmlFor="password" className="sr-only">Wallet Address</label>
               <input
                 required
-                disabled={true}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={walletAddress}
+                placeholder="WalletAddress"
+                value={eoa}
               />
             </div>
           </div>

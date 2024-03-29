@@ -2,34 +2,22 @@ import React, { useState } from 'react';
 import { ethers } from 'ethers';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {BrowserProvider} from 'ethers'
+import { BrowserProvider } from 'ethers'
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
+import { useContext } from 'react';
+import UserContext from '../context/userContext.js';
+import { WalletMinimal } from 'lucide-react';
 
 
-const ConnectWallet = ({ walletAddress, setWalletAddress }) => {
+
+
+const ConnectWallet = () => {
+
     const navigate = useNavigate();
-    const [userNotFound, setUserNotFound] = useState(false);
 
-    // useEffect(() => {
-    //     const fetchWalletAddress = async () => {
-    //         try {
-    //             if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
-    //                 const accounts = await window.ethereum.request({
-    //                     method: "eth_requestAccounts",
-    //                 });
-    //                 const storedWalletAddress = accounts[0];
-    //                 if (storedWalletAddress) {
-    //                     setWalletAddress(storedWalletAddress);
-    //                 }
-    //             } else {
-    //                 console.log("Ethereum is not installed");
-    //             }
-    //         } catch (error) {
-    //             console.log(error);
-    //         }
-    //     };
-    //     fetchWalletAddress();
-    // }, []);
+    const { eoa, setEoa } = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext)
 
     const connectWallet = async () => {
         if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
@@ -38,38 +26,58 @@ const ConnectWallet = ({ walletAddress, setWalletAddress }) => {
                     method: "eth_requestAccounts",
                 });
 
-                console.log('accounts:', accounts[0]);
+                // console.log('accounts:', accounts[0]);
+                setEoa(accounts[0]);
+                // localStorage.setItem('eoa', accounts[0]);
+
 
                 const res = await axios.post('http://localhost:8080/api/loginUser', {
                     eoa: accounts[0]
                 });
+                setUser(res.data.user);
 
-                console.log('res:', res.data);
-    
-              
-                // const provider = new ethers.BrowserProvider(window.ethereum);
-                // const signer = provider.getSigner();
-                // await provider.send("eth_requestAccounts", []);
+                if (res.data.status == 400) {
+                    toast.success('User Not Found, Please Signup first'); // Not working ??
+                    setTimeout(() => {
+                        navigate('/signup', { state: { eoa: accounts[0] } });
+                    }, 500);
+                }
+
+                if (res.data.status == 200) {
+                    toast.success('User logged in successfully');
+                    setTimeout(() => {
+                        navigate('/dashboard');
+                    }, 2000);
+                }
             } catch (error) {
                 console.error('Error while connecting wallet:', error);
-                // Handle error while connecting wallet
             }
         } else {
             console.log("Ethereum is not installed");
-            // Handle case when Ethereum is not installed
         }
     };
-    
+
+    // useEffect(() => {
+    //   connectWallet()
+    // }, []);
+
 
     return (
         <div>
-            {walletAddress ? (
+            <Toaster />
+
+            <button onClick={connectWallet} className='bg-white border-[1px] border-white p-2 rounded-lg flex gap-2'>
+                <WalletMinimal />
+                <span> Connect Wallet </span>
+            </button>
+
+            {/* {eoa ? (
                 <div>
-                    <p>{walletAddress && `${walletAddress.slice(0, 3)}...${walletAddress.slice(-8)}`} </p>
+                    <p>{eoa && `${eoa.slice(0, 3)}...${eoa.slice(-8)}`} </p>
                 </div>
             ) : (
                 <button onClick={connectWallet}>Connect Wallet</button>
-            )}
+            )} */}
         </div>
     );
 }
