@@ -10,7 +10,6 @@ import { UserOperationBuilder, Presets, Client } from 'userop';
 import { Constants } from 'userop';
 import { WALLET_FACTORY_ABI, ENTRY_POINT_ABI, ERC721_CONTRACT_ABI, WALLET_ABI } from '../../../blockchain/utils/abi.js';
 
-
 const ContractInteraction = () => {
   const { user, signer, provider } = useContext(UserContext)
   let { id } = useParams();
@@ -20,6 +19,7 @@ const ContractInteraction = () => {
     const fetchContractData = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/contract/singleContract/${id}`);
+        console.log("------------------------",response.data.contract);
         setContractData(response.data.contract);
       } catch (error) {
         console.error('Error fetching contract data:', error);
@@ -38,13 +38,13 @@ const ContractInteraction = () => {
     let paymasterSign!: string;
 
     if (paymasterPrivateKey) {
+      console.log("This should not come");
       // paymaster = new ethers.Wallet(paymasterPrivateKey!, initializeProvider('mumbai', env)); // dynamic chain
       // paymasterSign = await paymaster.signMessage(ethers.utils.arrayify(userOpHash));
       // userWallet = new ethers.Wallet(privateKey, initializeProvider('mumbai', env)); // dynamic chain
       // const signature1 = await userWallet.signMessage(ethers.utils.arrayify(userOpHash));
       // return [signature1, paymasterSign];
     } else {
-      console.log("pohocha yaha tak?")
       const signature1 = await signer.signMessage(ethers.utils.arrayify(userOpHash));
 
       return [signature1];
@@ -53,7 +53,6 @@ const ContractInteraction = () => {
 
   const getUserOpHash = async (userOp: any, chain: string) => {
     // in future need a condition if it is an eth transfer or else
-    console.log('UserOp:', userOp);
 
     const encodedUserOp = defaultAbiCoder.encode(
       ['address', 'uint256', 'bytes32', 'bytes32', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256', 'bytes32'],
@@ -128,7 +127,7 @@ const ContractInteraction = () => {
   };
 
   const getWalletContract = () => {
-    const walletContract = new ethers.Contract("0x8bE4D5134764037021B3d474104C6CD6F147a63d", WALLET_ABI, provider);
+    const walletContract = new ethers.Contract("0x10ce4D71f14A554B4Cc8e5588dcf3cB3622268e5", WALLET_ABI, provider);
     return walletContract;
   };
 
@@ -141,7 +140,6 @@ const ContractInteraction = () => {
   ) {
     try {
       let walletContract = getWalletContract();
-      console.log("Contractttt",walletContract)
       const bundlerProvider = new ethers.providers.JsonRpcProvider("https://api.stackup.sh/v1/node/88ea134e5270ba36996bbae58c714b510c4619da6f8aeda8f5b1657c16dc8995"); // still mumbai
       const entryPointContract = getEntryPointContract();
 
@@ -165,14 +163,11 @@ const ContractInteraction = () => {
       return error;
     }
   }
-  console.log(signer);
   const tokenContract = new ethers.Contract(
-   "0x03A0888F3974FB419745b3E57c6Fe5D37975673c", // DB se lana h ye
+   "0x7e37121AA71ABC1B63fDD046B9052E77fB9feb10", // DB se lana h ye
     ERC721_CONTRACT_ABI,
     provider
   );
-
-  console.log('Token Contract:', tokenContract);
 
   async function generateEncodedData(
     functionName: string,
@@ -200,12 +195,11 @@ const ContractInteraction = () => {
     let data;
     if (nativeTransfer) {
       data = Uint8Array.from([]);
-      console.log("Ohhhhh",data)
+      console.log("Ohhhhh")
     } else {
       data = await generateEncodedData(functionName!, functionParams!); // to be imported from another file
     }
     const amountInBignumber = ethers.utils.parseEther(amount);
-    // console.log(walletAddress, toAddress, amountInBignumber, initCode, data)
     const userOp = await getUserOpForTransaction(
       walletAddress,
       toAddress,
@@ -213,8 +207,8 @@ const ContractInteraction = () => {
       initCode,
       data
     );
-    console.log('Real UserOp:', userOp);
     if (isPaymaster) {
+      console.log("This should not come");
       // maybe used later on
 
       // userOp.paymasterAndData = await composePaymasterAndData(
@@ -268,7 +262,6 @@ const ContractInteraction = () => {
     );
 
     // to be imported from another file
-    console.log(userOp.sender, BigNumber.from(userOp.nonce), initCode, userOp.callData.toString(), signatures)
     const builder = await builderOp(
       userOp.sender,
       BigNumber.from(userOp.nonce),
@@ -276,8 +269,6 @@ const ContractInteraction = () => {
       userOp.callData.toString(),
       signatures
     );
-
-    console.log("oh nooo shit", builder)
 
     builder
       .setMaxFeePerGas(userOp.maxFeePerGas)
@@ -288,8 +279,8 @@ const ContractInteraction = () => {
 
   const sendEthers = async () => {
     const builder = await builderForTransaction(
-      "0x8bE4D5134764037021B3d474104C6CD6F147a63d", // to be fetched from db
-      "0x9b95BCF77c4A47903aD43d0afD64af92dF464fDF", // to addresss
+      "0x96480e4Df1d5b14C931Ec3443Ab886c33F9Dc563", // to be fetched from db
+      "0xF7F20217A00825A19EEcCc609F735f2A38E02fC6", // to addresss
       "0.01", // value
       true,
       "mumbai",
@@ -304,11 +295,6 @@ const ContractInteraction = () => {
     const transactionReceipt = await receipt?.getTransactionReceipt();
     console.log("Transaction Receipt:", transactionReceipt?.transactionHash);
   }
-
-
-
-
-
   console.log('Contract Data:', contractData);
 
   return (

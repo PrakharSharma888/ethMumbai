@@ -41,7 +41,7 @@ const getContracts = async (req, res) => {
 const SingleContract = async (req, res) => {
     try {
         const contract = await MusicNFTContract.findById(req.params.id);
-        console.log(req.params.id);
+        // console.log(req.params.id);
         res.status(200).json({ contract });
     } catch (error) {
         res.status(400).json({ error: error.message });
