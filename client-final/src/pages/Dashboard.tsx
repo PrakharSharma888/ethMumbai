@@ -12,42 +12,42 @@ const TemplateData = [
     name: "Token",
     description: "Generate a ethereum custom token",
     url: 'create/token',
-    icon: <Gem size={60} strokeWidth={1} />
+    icon: '../assets/icons/token.png'
   },
   {
     id: 2,
     name: "NFT",
     description: "Generate a ethereum custom NFT",
     url: 'create/nft',
-    icon: <Gem size={60} strokeWidth={1} />
+    icon: '../assets/icons/nft.png'
   },
   {
     id: 3,
     name: "Staking",
     description: "Generate a ethereum custom NFT",
     url: 'create/staking',
-    icon: <Gem size={60} strokeWidth={1} />
+    icon: '../assets/icons/staking.png'
   },
   {
     id: 4,
     name: "Farm",
     description: "Generate a ethereum custom NFT",
     url: 'create/farm',
-    icon: <Gem size={60} strokeWidth={1} />
+    icon: '../assets/icons/farm.png'
   },
   {
     id: 5,
     name: "Marketplace",
     description: "Generate a ethereum custom NFT",
     url: 'create/marketplace',
-    icon: <Gem size={60} strokeWidth={1} />
+    icon: '../assets/icons/marketplace.png'
   },
   {
     id: 6,
     name: "Launchpad",
     description: "Generate a ethereum custom NFT",
     url: 'create/launchpad',
-    icon: <Gem size={60} strokeWidth={1} />
+    icon: '../assets/icons/launchpad.png'
   },
 ]
 const Dashboard = () => {
@@ -164,7 +164,9 @@ const Dashboard = () => {
                     >
                       <Link to={data.url}>
                         <div className='w-full flex justify-center items-center'>
-                          <div className='Gemh-20 w-20 flex justify-center items-center'> {data.icon} </div>
+                          <div className='Gemh-20 w-20 flex justify-center items-center'> 
+                          <img src={data.icon} alt='err' className='h-10' />
+                          </div>
                         </div>
                         <div className="flex flex-col justify-center text-center">
                           <span className="text-xl font-semibold">

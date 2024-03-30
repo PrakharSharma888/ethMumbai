@@ -8,7 +8,7 @@ import ConnectWallet from './ConnectWallet';
 import { useContext } from 'react';
 import UserContext from '../context/userContext.js';
 import toast, { Toaster } from 'react-hot-toast';
-import Logo from '../assets/main_logo.png'
+import Logo from '../assets/final_logo.png'
 
 
 declare global {

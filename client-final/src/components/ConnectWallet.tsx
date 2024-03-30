@@ -16,7 +16,7 @@ const ConnectWallet = () => {
 
     const navigate = useNavigate();
 
-    const { eoa, setEoa, setSigner } = useContext(UserContext)
+    const { eoa, setEoa, setSigner, setProvider } = useContext(UserContext)
     const { user, setUser } = useContext(UserContext)
 
 
@@ -24,7 +24,7 @@ const ConnectWallet = () => {
         if (typeof window !== "undefined" && typeof window.ethereum !== "undefined") {
             try {
                 const provider = new ethers.providers.Web3Provider(window.ethereum)
-                
+                setProvider(provider)
                 await provider.send("eth_requestAccounts", []);
                 const signer = provider.getSigner();
                 setSigner(signer)

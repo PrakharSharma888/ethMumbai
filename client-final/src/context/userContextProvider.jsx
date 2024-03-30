@@ -6,6 +6,7 @@ const UserContextProvider = ({children}) => {
   const [user, setUser] = useState()
   const [eoa, setEoa] = useState('')
   const [signer, setSigner] = useState(null)
+  const [provider, setProvider] = useState(null)
 
   console.log("UserContextProvider user:", user);
 
@@ -30,7 +31,7 @@ const UserContextProvider = ({children}) => {
   }
 
   return(
-    <UserContext.Provider value={{user, setUser, eoa, setEoa,LogOut, setSigner, signer}}>
+    <UserContext.Provider value={{user, setUser, eoa, setEoa,LogOut, setSigner, signer, setProvider, provider}}>
       {children}
     </UserContext.Provider>
   )
