@@ -5,49 +5,55 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useContext } from 'react';
 import UserContext from '../context/userContext.js';
 import { Gem } from 'lucide-react';
+import SportsAchivement from '../assets/templates/sports.png'
+import NFT_IMG from '../assets/templates/MusicNFT.png'
+import InGameItems from '../assets/templates/InGameItems.png'
+import MedicalResearch from '../assets/templates/MedicalResearc.png'
+import PennyCollection from '../assets/templates/PennyCollection.png'
+import CardCollection from '../assets/templates/InGameItems.png'
 
 const TemplateData = [
   {
     id: 1,
-    name: "Token",
+    name: "Sports Achivement",
     description: "Generate a ethereum custom token",
-    url: 'create/token',
-    icon: '../assets/icons/token.png'
+    url: 'create/sports',
+    icon: SportsAchivement
   },
   {
     id: 2,
-    name: "NFT",
+    name: "Music NFT",
     description: "Generate a ethereum custom NFT",
     url: 'create/nft',
-    icon: '../assets/icons/nft.png'
+    icon: NFT_IMG
   },
   {
     id: 3,
-    name: "Staking",
+    name: "In-games Items",
     description: "Generate a ethereum custom NFT",
     url: 'create/staking',
-    icon: '../assets/icons/staking.png'
+    icon: InGameItems
   },
   {
     id: 4,
-    name: "Farm",
+    name: "Medical Research",
     description: "Generate a ethereum custom NFT",
     url: 'create/farm',
-    icon: '../assets/icons/farm.png'
+    icon: MedicalResearch
   },
   {
     id: 5,
-    name: "Marketplace",
+    name: "Penny Collection",
     description: "Generate a ethereum custom NFT",
     url: 'create/marketplace',
-    icon: '../assets/icons/marketplace.png'
+    icon: PennyCollection
   },
   {
     id: 6,
-    name: "Launchpad",
+    name: "Card Collection",
     description: "Generate a ethereum custom NFT",
     url: 'create/launchpad',
-    icon: '../assets/icons/launchpad.png'
+    icon: CardCollection
   },
 ]
 const Dashboard = () => {
@@ -66,8 +72,10 @@ const Dashboard = () => {
     }
   };
 
+  // TODO : Abhi sirf sports contracts ke liye h ye, baakio k liye bhi dynamic bnana h
+
   useEffect(() => {
-    axios.post("http://localhost:8080/contract/getContracts", {
+    axios.post("http://localhost:8080/contract/getSportsContracts", {
       userID: user._id
     })
       .then((res) => {
@@ -89,7 +97,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="h-full w-screen text-white bg-black p-10 flex flex-col gap-10 mt-14">
+    <div className="h-screen w-screen text-white bg-black p-10 flex flex-col gap-10 mt-14">
       <div className="border-[1px] py-5 px-10 rounded-2xl border-gray-700 h-full flex gap-10 flex-col justify-between">
         {
           user && (
@@ -124,7 +132,7 @@ const Dashboard = () => {
 
         {showTemplate === "new-template" ? (
           <>
-            <div className="flex  justify-between items-center border-gray-700 border-[1px] rounded-2xl py-10 px-8">
+            <div className="flex justify-between items-center border-gray-700 border-[1px] rounded-2xl py-10 px-8">
               <div className="flex flex-col">
                 <span className="text-3xl font-semibold">
                   {" "}
@@ -155,18 +163,18 @@ const Dashboard = () => {
                   them later
                 </span>
               </div>
-              <div className="grid grid-cols-3 gap-4 cursor-pointer">
+              <div className="grid grid-cols-3 gap-4 cursor-pointer w-full">
                 {TemplateData.map((data) => {
                   return (
-                    <div
-                      className="flex flex-col gap-3 justify-centerc items-center py-10 border-[0.5px] bg-black text-white border-gray-400 rounded-2xl min-w-36 min-h-32"
+                    <Link to={data.url}
+                      className="flex flex-col gap-3 justify-end items-center py-10 border-[0.5px] min-h-56 bg-black text-white border-gray-400 rounded-2xl w-full"
                       key={data.id}
+                      style={{ backgroundImage: `url(${data.icon})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                     >
-                      <Link to={data.url}>
+
+                      <div className=''>
                         <div className='w-full flex justify-center items-center'>
-                          <div className='Gemh-20 w-20 flex justify-center items-center'> 
-                          <img src={data.icon} alt='err' className='h-10' />
-                          </div>
+                          {/* Remove the div with className='Gemh-20 w-20 flex justify-center items-center' */}
                         </div>
                         <div className="flex flex-col justify-center text-center">
                           <span className="text-xl font-semibold">
@@ -176,8 +184,9 @@ const Dashboard = () => {
                             {data.description}
                           </span>
                         </div>
-                      </Link>
-                    </div>
+                      </div>
+                    </Link>
+
                   );
                 })}
               </div>
@@ -185,34 +194,35 @@ const Dashboard = () => {
             </div>
           </>
         ) : (
-          <div className="grid grid-cols-2 gap-10 ">
-            {
-              createdTemplates.map((template) => {
-                return (
-                  <div className="flex flex-col gap-3 justify-centerc items-center py-10 border-[0.5px] bg-white text-black border-gray-400 rounded-2xl">
-                    <div className='flex justify-center'>
-                      <img src='https://thumbor.forbes.com/thumbor/fit-in/x/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg' alt='err' className='' />
-                    </div>
-                    <div className="flex flex-col justify-center text-center">
-                      <span className="text-xl font-semibold">
-                        {template.artistName}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {template.contractAddress}
-                      </span>
-                      <div>
-                        {
-                          template.trackName
-                        }
-                      </div>
-                    </div>
-
-                    <Link to={`/contract/${template._id}`} className="bg-black w-full px-10 text-white text-center py-3 rounded-sm cursor-pointer"> Interact With this contract </Link>
+          <div className="grid grid-cols-2 gap-10">
+            {createdTemplates.map((template) => {
+              return (
+                <div
+                  key={template._id}
+                  className="relative bg-cover bg-center flex flex-col justify-center items-center py-10 border-[0.5px] min-h-80 bg-white text-black border-gray-400 rounded-2xl"
+                  style={{ backgroundImage: `url(https://www2.deloitte.com/content/dam/insights/articles/GLOB164584_Sports-NFT/primary/GLOB164584_Banner.png/jcr:content/renditions/cq5dam.web.1200.627.jpeg)` }}
+                >
+                  <div className="absolute inset-0 bg-black opacity-40 rounded-2xl"></div>
+                  <div className="z-10 relative flex flex-col justify-center items-center text-center">
+                    <span className="text-xl font-semibold text-white">
+                      {template.TokenName}
+                    </span>
+                    {/* <span className="text-xs text-white">
+                      {template.contractAddress}
+                    </span> */}
+                    <div className='text-black bg-white px-1 rounded-md'>{template.TokenSymbol}</div>
+                    <Link
+                      to={`/contract/${template._id}`}
+                      className="bg-black w-full px-10 text-white text-center py-3 rounded-sm cursor-pointer"
+                    >
+                      Interact With this contract
+                    </Link>
                   </div>
-                )
-              })
-            }
+                </div>
+              );
+            })}
           </div>
+
         )}
 
 

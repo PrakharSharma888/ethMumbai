@@ -21,6 +21,7 @@ const contractSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    
 })
 
 const Contract = mongoose.model('contract', contractSchema)

@@ -16,12 +16,15 @@ const ContractInteraction = () => {
   const [contractData, setContractData] = useState({})
   const [receiverAddress, setReceiverAddress] = useState('')
   const [amount, setAmount] = useState('')
+  const [ThingToDo, setThingToDo] = useState('transfer')
+  const [URI, setURI] = useState('')
+
 
   useEffect(() => {
     const fetchContractData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/contract/singleContract/${id}`);
-        console.log("------------------------",response.data.contract);
+        const response = await axios.get(`http://localhost:8080/contract/singleSportsContract/${id}`);
+        console.log("------------------------", response.data.contract);
         setContractData(response.data.contract);
       } catch (error) {
         console.error('Error fetching contract data:', error);
@@ -166,7 +169,7 @@ const ContractInteraction = () => {
     }
   }
   const tokenContract = new ethers.Contract(
-   "0x7e37121AA71ABC1B63fDD046B9052E77fB9feb10", // DB se lana h ye
+    "0x7e37121AA71ABC1B63fDD046B9052E77fB9feb10", // DB se lana h ye
     ERC721_CONTRACT_ABI,
     provider
   );
@@ -279,7 +282,7 @@ const ContractInteraction = () => {
     return builder;
   };
 
-  const sendEthers = async () => {
+  const Transaction = async () => {
     const builder = await builderForTransaction(
       user.smartWalletAddress, // smart contract Add
       receiverAddress, // reciver
@@ -302,56 +305,152 @@ const ContractInteraction = () => {
   console.log('Contract Data:', contractData);
 
   return (
-    <div className='p-5 flex flex-col justify-around h-[90vh] gap-5 mt-40'>
-      ID : {id}
+    <div className='py-20 bg-black text-white h-fit px-10 flex flex-col gap-5'>
+      <div className='flex flex-col gap-3'>
+        <span className='font-semibold text-3xl'>Sport's Achivement NFT</span>
+        <span className='text-sm text-gray-400'>Lorem ipsum dolor sit amet consectetur. Ultricies ut facilisis dolor id iaculis nunc id urna montes. Placerat lorem rutrum mattis pellentesque lectus consectetur. Urna morbi a integer nisl quam lacus morbi. Viverra luctus eu maecenas et orci. Massa tempor sagittis enim euismod facilisis erat placerat. Urna nulla consectetur consectetur in tristique donec.</span>
+      </div>
+
+      <div className='flex gap-4 items-center'>
+        <span className='text-2xl '>
+          Token Information :
+        </span>
+        <span className='bg-white text-black px-1 rounded-md'> ERC721 </span>
+      </div>
+
+      <div className="border-2 border-gray-300 px-2 rounded-xl">
+        <table className="w-full">
+          <tbody>
+            <tr>
+              <td className="text-2xl font-semibold">About Contract :</td>
+            </tr>
+            <tr className="border-b border-gray-300">
+              <td>Contract Name:</td>
+              <td>{contractData.SportsMName}</td>
+            </tr>
+            <tr className="border-b border-gray-300">
+              <td>Token Name:</td>
+              <td>{contractData.TokenName}</td>
+            </tr>
+            <tr className="border-b border-gray-300">
+              <td>Token Symbol:</td>
+              <td>{contractData.TokenSymbol}</td>
+            </tr>
+            {/* Add new lines here */}
+            <tr className="border-b border-gray-300">
+              <td>Total Supply:</td>
+              <td>{contractData.TotalSupply}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
 
-      <div>
-        <div className='text-2xl font-semibold'>
-          Artist : {contractData.artistName}
+      <div className='border-[1px] border-gray-300 rounded-xl p-3'>
+        <div className='flex flex-col'>
+          <span className='text-2xl font-semibold'> Choose Interaction Type </span>
+          <span className='text-sm text-gray-300'> Select what you want to do with the smart contract </span>
         </div>
-        <div className='text-sm text-gray-600'>
-          Track Name : {contractData.trackName}
+
+        <div>
+          <select
+            className='w-full p-2 rounded-md bg-black border-[1px] mt-2'
+            onChange={(e) => setThingToDo(e.target.value)}
+          >
+            <option value="transfer">Transfer</option>
+            <option value="mint">Mint</option>
+            <option value="burn">Burn</option>
+          </select>
         </div>
+        <div>
+          {ThingToDo === "transfer" && (
+            <div className='pt-10'>
+              <div className='text-2xl font-medium'>
+                Transfer
+              </div>
+
+              <div className='flex  gap-3 flex-col'>
+                <div className='flex  gap-3 items-center'>
+                  <div>
+                    Amount in ETH :
+                  </div>
+                  <input type="text" className='bg-black text-white border-[1px] p-1 rounded-md focus:outline-none' value={amount} onChange={(e) => setAmount(e.target.value)} />
+                </div>
+
+                <div className='flex  gap-16 items-center'>
+                  <div>
+                    Send to :
+                  </div>
+                  <input type="text" className='bg-black text-white border-[1px] p-1 rounded-md focus:outline-none' value={receiverAddress} onChange={(e) => setReceiverAddress(e.target.value)} />
+                </div>
+
+                <div onClick={Transaction} className='bg-white text-black w-1/2 p-1 rounded-xl text-center'>
+                  Send
+                </div>
+              </div>
+            </div>
+          )}
+          {ThingToDo === "mint" && (
+            <div className='pt-10'>
+              <div className='text-2xl font-medium'>
+                Mint
+              </div>
+
+              <div className='flex  gap-3 flex-col'>
+                <div className='flex  gap-3 items-center'>
+                  <div>
+                   URI : 
+                  </div>
+                  <input type="text" className='bg-black text-white border-[1px] p-1 rounded-md focus:outline-none' value={U} onChange={(e) => setURI(e.target.value)} />
+                </div>
+
+                <div className='flex  gap-16 items-center'>
+                  <div>
+                    Send to :
+                  </div>
+                  <input type="text" className='bg-black text-white border-[1px] p-1 rounded-md focus:outline-none' value={receiverAddress} onChange={(e) => setReceiverAddress(e.target.value)} />
+                </div>
+
+                <div className='bg-white text-black w-1/2 p-1 rounded-xl text-center'>
+                  Send
+                </div>
+              </div>
+            </div>
+          )}
+          {ThingToDo === "burn" && (
+            <div className='pt-10'>
+              <div className='text-2xl font-medium'>
+                Burn
+              </div>
+
+              <div className='flex  gap-3 flex-col'>
+                <div className='flex  gap-3 items-center'>
+                  <div>
+                    Amount in ETH :
+                  </div>
+                  <input type="text" className='bg-black text-white border-[1px] p-1 rounded-md focus:outline-none' value={amount} onChange={(e) => setAmount(e.target.value)} />
+                </div>
+
+                <div className='flex  gap-16 items-center'>
+                  <div>
+                    Send to :
+                  </div>
+                  <input type="text" className='bg-black text-white border-[1px] p-1 rounded-md focus:outline-none' value={receiverAddress} onChange={(e) => setReceiverAddress(e.target.value)} />
+                </div>
+
+                <div className='bg-white text-black w-1/2 p-1 rounded-xl text-center'>
+                  Send
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+
       </div>
 
       <div>
-        <div className='text-2xl font-semibold'>
-          Contract Address : {contractData.contractAddress}
-        </div>
-        <div className='text-sm text-gray-600'>
-          Contract Name : {contractData.userID}
-        </div>
-      </div>
-
-      <div className='px-5 grid grid-cols-3 gap-5 h-1/2'>
-        <div className='bg-gray-100 h-full rounded-xl flex flex-col justify-center items-center gap-4'>
-
-          <span className='text-xl font-bold'> Transfer </span>
-          <div className='flex flex-col items-center mb-2'>
-            <label htmlFor='amount' className='mb-1'>Amount in ETH:</label>
-            <input type='number' id='amount' onChange={(e)=>setAmount(e.target.value)} className='border border-gray-300 rounded-md p-1 w-full' />
-          </div>
-
-          <div className='flex flex-col items-center'>
-            <label htmlFor='recipient' className='mb-1 '>Send to:</label>
-            <input type='text' id='recipient' onChange={(e)=>setReceiverAddress(e.target.value)} className='border border-gray-300 rounded-md p-1' />
-          </div>
-
-          <button className='bg-black text-white w-1/2 py-3 rounded-lg' onClick={sendEthers}> Send </button>
-        </div>
-
-        <div className='bg-gray-100 flex justify-center h-full items-center rounded-xl'>
-          Mint
-        </div>
-
-        <div className='bg-gray-100 flex justify-center h-full items-center rounded-xl'>
-          Burn
-        </div>
-      </div>
-
-      <div>
-        <CodeEditor />
+        <CodeEditor/>
       </div>
 
     </div>
