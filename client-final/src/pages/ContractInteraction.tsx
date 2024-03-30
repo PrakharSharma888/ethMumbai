@@ -14,6 +14,8 @@ const ContractInteraction = () => {
   const { user, signer, provider } = useContext(UserContext)
   let { id } = useParams();
   const [contractData, setContractData] = useState({})
+  const [receiverAddress, setReceiverAddress] = useState('')
+  const [amount, setAmount] = useState('')
 
   useEffect(() => {
     const fetchContractData = async () => {
@@ -127,7 +129,7 @@ const ContractInteraction = () => {
   };
 
   const getWalletContract = () => {
-    const walletContract = new ethers.Contract("0x10ce4D71f14A554B4Cc8e5588dcf3cB3622268e5", WALLET_ABI, provider);
+    const walletContract = new ethers.Contract("0xC7D3Eded363cB93D45f78c81e22Ca36A337cFf20", WALLET_ABI, provider);
     return walletContract;
   };
 
@@ -279,13 +281,15 @@ const ContractInteraction = () => {
 
   const sendEthers = async () => {
     const builder = await builderForTransaction(
-      "0x96480e4Df1d5b14C931Ec3443Ab886c33F9Dc563", // to be fetched from db
-      "0xF7F20217A00825A19EEcCc609F735f2A38E02fC6", // to addresss
-      "0.01", // value
+      user.smartWalletAddress, // smart contract Add
+      receiverAddress, // reciver
+      amount, // amount
       true,
       "mumbai",
       false
     );
+
+    console.log('HERE', amount, receiverAddress, user.smartWalletAddress)
 
     const client = await Client.init("https://api.stackup.sh/v1/node/fcb5c38bd4ce5b3b4a8825b1938f5d52784c0bc3b9376bf5d06ccecbc257027a");
     const result = await client.sendUserOperation(builder);
@@ -326,12 +330,12 @@ const ContractInteraction = () => {
           <span className='text-xl font-bold'> Transfer </span>
           <div className='flex flex-col items-center mb-2'>
             <label htmlFor='amount' className='mb-1'>Amount in ETH:</label>
-            <input type='number' id='amount' className='border border-gray-300 rounded-md p-1 w-full' />
+            <input type='number' id='amount' onChange={(e)=>setAmount(e.target.value)} className='border border-gray-300 rounded-md p-1 w-full' />
           </div>
 
           <div className='flex flex-col items-center'>
             <label htmlFor='recipient' className='mb-1 '>Send to:</label>
-            <input type='text' id='recipient' className='border border-gray-300 rounded-md p-1' />
+            <input type='text' id='recipient' onChange={(e)=>setReceiverAddress(e.target.value)} className='border border-gray-300 rounded-md p-1' />
           </div>
 
           <button className='bg-black text-white w-1/2 py-3 rounded-lg' onClick={sendEthers}> Send </button>
