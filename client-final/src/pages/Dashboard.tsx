@@ -5,49 +5,55 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useContext } from 'react';
 import UserContext from '../context/userContext.js';
 import { Gem } from 'lucide-react';
+import Token from '../assets/icons/token.png'
+import NFT from '../assets/icons/NFT.png'
+import Staking from '../assets/icons/staking.png'
+import Farm from '../assets/icons/farm.png'
+import Marketplace from '../assets/icons/marketPlace.png'
+import Launchpad from '../assets/icons/Launchpad.png'
 
 const TemplateData = [
   {
     id: 1,
-    name: "Token",
+    name: "Sports Achivements",
     description: "Generate a ethereum custom token",
     url: 'create/token',
-    icon: '../assets/icons/token.png'
+    icon: Token
   },
   {
     id: 2,
-    name: "NFT",
+    name: "Musical NFT",
     description: "Generate a ethereum custom NFT",
     url: 'create/nft',
-    icon: '../assets/icons/nft.png'
+    icon: NFT
   },
   {
     id: 3,
-    name: "Staking",
+    name: "Penny Collection",
     description: "Generate a ethereum custom NFT",
     url: 'create/staking',
-    icon: '../assets/icons/staking.png'
+    icon: Staking
   },
   {
     id: 4,
-    name: "Farm",
+    name: "Medical discoveries",
     description: "Generate a ethereum custom NFT",
     url: 'create/farm',
-    icon: '../assets/icons/farm.png'
+    icon: Farm
   },
   {
     id: 5,
-    name: "Marketplace",
+    name: "Poekmon Cards",
     description: "Generate a ethereum custom NFT",
     url: 'create/marketplace',
-    icon: '../assets/icons/marketplace.png'
+    icon: Marketplace
   },
   {
     id: 6,
-    name: "Launchpad",
+    name: "In game characters",
     description: "Generate a ethereum custom NFT",
     url: 'create/launchpad',
-    icon: '../assets/icons/launchpad.png'
+    icon: Launchpad
   },
 ]
 const Dashboard = () => {
@@ -159,13 +165,13 @@ const Dashboard = () => {
                 {TemplateData.map((data) => {
                   return (
                     <div
-                      className="flex flex-col gap-3 justify-centerc items-center py-10 border-[0.5px] bg-black text-white border-gray-400 rounded-2xl min-w-36 min-h-32"
+                      className="flex flex-col gap-3 justify-centerc items-center py-10 border-[0.5px] bg-black text-white border-gray-400 rounded-xl min-w-36 min-h-32"
                       key={data.id}
                     >
                       <Link to={data.url}>
                         <div className='w-full flex justify-center items-center'>
-                          <div className='Gemh-20 w-20 flex justify-center items-center'> 
-                          <img src={data.icon} alt='err' className='h-10' />
+                          <div className='Gemh-20 w-20 flex justify-center items-center'>
+                            <img src={data.icon} alt='err' className='h-10' />
                           </div>
                         </div>
                         <div className="flex flex-col justify-center text-center">
@@ -180,6 +186,7 @@ const Dashboard = () => {
                     </div>
                   );
                 })}
+
               </div>
               <div>last row</div>
             </div>
@@ -189,7 +196,7 @@ const Dashboard = () => {
             {
               createdTemplates.map((template) => {
                 return (
-                  <div className="flex flex-col gap-3 justify-centerc items-center py-10 border-[0.5px] bg-white text-black border-gray-400 rounded-2xl">
+                  <div className="flex flex-col gap-3 justify-centerc items-center py-10 border-[0.5px] bg-white text-black border-gray-400 rounded-xl">
                     <div className='flex justify-center'>
                       <img src='https://thumbor.forbes.com/thumbor/fit-in/x/https://www.forbes.com/advisor/in/wp-content/uploads/2022/03/monkey-g412399084_1280.jpg' alt='err' className='' />
                     </div>

@@ -14,12 +14,16 @@ const NFT = () => {
   const [trackName, setTrackName] = useState("");
   const [trackArtist, setTrackArtist] = useState("");
   const { signer, user } = useContext(UserContext);
-  const [showNFTForm, setShowNFTForm] = useState(false);
+  const Balance = 10
+
+
   const route = useNavigate();
 
   if (!user) {
     route("/")
   }
+
+
 
   useEffect(() => {
     const getAcc = async () => {
@@ -40,31 +44,37 @@ const NFT = () => {
 
   const handleSubmit = async () => {
     setLoading(true);
-    const factory = new ethers.ContractFactory(
-      ERC721_CONTRACT_ABI,
-      ERC721_CONTRACT_BYTECODE,
-      signer
-    );
-    const contract = await factory.deploy(tokenName, tokenSymbol);
-    await contract.deployed(); // await here
-    console.log("Contract:", contract);
-
-    console.log("Track Name:", trackName);
-
-    const res = await axios.post("http://localhost:8080/contract/createMusicNFTContract", {
-      contractAddress: contract.address,
-      trackName,
-      artistName: trackArtist,
-      userID: user._id,
-    })
-
-    if(res.data){
+    if (Balance < 0.1) {
+      toast.error('Insufficient balance to deploy contract');
       setLoading(false);
+      return;
+    } else {
+      const factory = new ethers.ContractFactory(
+        ERC721_CONTRACT_ABI,
+        ERC721_CONTRACT_BYTECODE,
+        signer
+      );
+      const contract = await factory.deploy(tokenName, tokenSymbol);
+      await contract.deployed(); // await here
+      console.log("Contract:", contract);
+
+      console.log("Track Name:", trackName);
+
+      const res = await axios.post("http://localhost:8080/contract/createMusicNFTContract", {
+        contractAddress: contract.address,
+        trackName,
+        artistName: trackArtist,
+        userID: user._id,
+      })
+
+      if (res.data) {
+        setLoading(false);
+      }
+      toast.success("NFT Contract Deployed Successfully");
+      setTimeout(() => {
+        route(`/contract/${res.data.contract._id}`)
+      }, 1000)
     }
-    toast.success("NFT Contract Deployed Successfully");
-    setTimeout(() => {
-      route(`/contract/${res.data.contract._id}`)
-    }, 1000)
   };
 
 
@@ -113,7 +123,7 @@ const NFT = () => {
         onClick={handleSubmit}
         className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded-md focus:outline-none focus:bg-blue-600"
       >
-        <span> { loading ? ('Deploying.....') : ('Deploy')}</span>
+        <span> {loading ? ('Deploying.....') : ('Deploy')}</span>
       </button>
 
     </div>

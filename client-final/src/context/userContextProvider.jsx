@@ -16,6 +16,8 @@ const UserContextProvider = ({children}) => {
         console.log("fetching user data");
         const response = await axios.get("http://localhost:8080/api/userData");
         console.log("fetchUserData response:", response);
+        const balance = await provider.getBalance(response.data.eoa)
+        console.log("balance", balance)
         const userData = response.user; 
         setUser(userData);
       } catch (error) {
@@ -25,6 +27,7 @@ const UserContextProvider = ({children}) => {
 
     fetchUserData();
   }, []);
+
 
   const LogOut = () =>{
     setUser(null)

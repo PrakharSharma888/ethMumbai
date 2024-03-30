@@ -55,7 +55,7 @@ export default function Signup() {
   const createAccountAddress = async (
   ) => {
     setLoading(true);
-    const address = ["0x5FbDB2315678afecb367f032d93F642f64180aa3"]; // to be added
+    const address = [eoa]; // to be added
     let owners: string[] = [];
     let salt: string;
 

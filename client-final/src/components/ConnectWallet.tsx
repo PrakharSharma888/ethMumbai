@@ -16,7 +16,7 @@ const ConnectWallet = () => {
 
     const navigate = useNavigate();
 
-    const { eoa, setEoa, setSigner, setProvider } = useContext(UserContext)
+    const { eoa, setEoa, setSigner, setProvider, provider } = useContext(UserContext)
     const { user, setUser } = useContext(UserContext)
 
 

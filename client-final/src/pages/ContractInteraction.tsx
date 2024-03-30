@@ -13,23 +13,31 @@ import { WALLET_FACTORY_ABI, ENTRY_POINT_ABI, ERC721_CONTRACT_ABI, WALLET_ABI } 
 
 const ContractInteraction = () => {
   const { user, signer, provider } = useContext(UserContext)
+  const [reciverAddress, setReciverAddress] = useState('')
+  const [value, setValue] = useState('')
   let { id } = useParams();
+  const [currentUser, setCurrentUser] = useState({} as any)
   const [contractData, setContractData] = useState({})
+
+  setCurrentUser(user)
+
+  console.log('currentUser:', user)
 
   useEffect(() => {
     const fetchContractData = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/contract/singleContract/${id}`);
         setContractData(response.data.contract);
+        console.log('CA :', contractData)
+
       } catch (error) {
         console.error('Error fetching contract data:', error);
       }
     };
 
     fetchContractData();
-  }, [id])
+  }, [])
 
-  console.log('CA :', contractData)
 
 
   const getSignatures = async (userOpHash: string, paymasterPrivateKey?: string) => {
@@ -128,7 +136,7 @@ const ContractInteraction = () => {
   };
 
   const getWalletContract = () => {
-    const walletContract = new ethers.Contract("0x8bE4D5134764037021B3d474104C6CD6F147a63d", WALLET_ABI, provider);
+    const walletContract = new ethers.Contract(user.smartWalletAddress, WALLET_ABI, provider);
     return walletContract;
   };
 
@@ -140,8 +148,7 @@ const ContractInteraction = () => {
     data: any,
   ) {
     try {
-      let walletContract = getWalletContract();
-      console.log("Contractttt",walletContract)
+      const walletContract = getWalletContract();
       const bundlerProvider = new ethers.providers.JsonRpcProvider("https://api.stackup.sh/v1/node/88ea134e5270ba36996bbae58c714b510c4619da6f8aeda8f5b1657c16dc8995"); // still mumbai
       const entryPointContract = getEntryPointContract();
 
@@ -165,14 +172,14 @@ const ContractInteraction = () => {
       return error;
     }
   }
-  console.log(signer);
-  const tokenContract = new ethers.Contract(
-   "0x03A0888F3974FB419745b3E57c6Fe5D37975673c", // DB se lana h ye
-    ERC721_CONTRACT_ABI,
-    provider
-  );
+    const tokenContract = new ethers.Contract(
+      "0x336738364D9c075e87dabaE8eA9B0a713F84fc6d",
+      ERC721_CONTRACT_ABI,
+      provider
+    );
+    // console.log('Token Contract:', tokenContract);
 
-  console.log('Token Contract:', tokenContract);
+  
 
   async function generateEncodedData(
     functionName: string,
@@ -200,9 +207,8 @@ const ContractInteraction = () => {
     let data;
     if (nativeTransfer) {
       data = Uint8Array.from([]);
-      console.log("Ohhhhh",data)
     } else {
-      data = await generateEncodedData(functionName!, functionParams!); // to be imported from another file
+      data = await generateEncodedData(functionName!, functionParams!);
     }
     const amountInBignumber = ethers.utils.parseEther(amount);
     // console.log(walletAddress, toAddress, amountInBignumber, initCode, data)
@@ -213,7 +219,6 @@ const ContractInteraction = () => {
       initCode,
       data
     );
-    console.log('Real UserOp:', userOp);
     if (isPaymaster) {
       // maybe used later on
 
@@ -277,8 +282,6 @@ const ContractInteraction = () => {
       signatures
     );
 
-    console.log("oh nooo shit", builder)
-
     builder
       .setMaxFeePerGas(userOp.maxFeePerGas)
       .setMaxPriorityFeePerGas(userOp.maxPriorityFeePerGas);
@@ -288,9 +291,9 @@ const ContractInteraction = () => {
 
   const sendEthers = async () => {
     const builder = await builderForTransaction(
-      "0x8bE4D5134764037021B3d474104C6CD6F147a63d", // to be fetched from db
-      "0x9b95BCF77c4A47903aD43d0afD64af92dF464fDF", // to addresss
-      "0.01", // value
+      user.smartWalletAddress, // to be fetched from db
+      reciverAddress, // to addresss
+      value, // value
       true,
       "mumbai",
       false
@@ -304,10 +307,6 @@ const ContractInteraction = () => {
     const transactionReceipt = await receipt?.getTransactionReceipt();
     console.log("Transaction Receipt:", transactionReceipt?.transactionHash);
   }
-
-
-
-
 
   console.log('Contract Data:', contractData);
 
@@ -339,13 +338,13 @@ const ContractInteraction = () => {
 
           <span className='text-xl font-bold'> Transfer </span>
           <div className='flex flex-col items-center mb-2'>
-            <label htmlFor='amount' className='mb-1'>Amount in ETH:</label>
-            <input type='number' id='amount' className='border border-gray-300 rounded-md p-1 w-full' />
+            <label htmlFor='amount' className='mb-1'>value in ETH:</label>
+            <input type='number' id='amount' onChange={(e) => setValue(e.target.value)} className='border border-gray-300 rounded-md p-1 w-full' />
           </div>
 
           <div className='flex flex-col items-center'>
-            <label htmlFor='recipient' className='mb-1 '>Send to:</label>
-            <input type='text' id='recipient' className='border border-gray-300 rounded-md p-1' />
+            <label htmlFor='recipient' className='mb-1 '>Send to: </label>
+            <input type='text' id='recipient' onChange={(e) => setReciverAddress(e.target.value)} className='border border-gray-300 rounded-md p-1' />
           </div>
 
           <button className='bg-black text-white w-1/2 py-3 rounded-lg' onClick={sendEthers}> Send </button>
