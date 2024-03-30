@@ -12,14 +12,13 @@ import { WALLET_FACTORY_ABI } from "../../../blockchain/utils/abi.js";
 
 export default function Signup() {
   const location = useLocation();
-
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false);
   const { eoa, setUser, signer } = useContext(UserContext)
-
   console.log('walletAddress:', eoa);
 
   const [userName, setUserName] = useState("");
+
   const [email, setEmail] = useState("");
   const [smartWalletAddress, setSmartWalletAddress] = useState("");
 
@@ -55,6 +54,7 @@ export default function Signup() {
 
   const createAccountAddress = async (
   ) => {
+    setLoading(true);
     const address = ["0x5FbDB2315678afecb367f032d93F642f64180aa3"]; // to be added
     let owners: string[] = [];
     let salt: string;
@@ -68,31 +68,37 @@ export default function Signup() {
     const walletAddress = await getWalletAddress(owners, salt);
     console.log("My addresssssesss", walletAddress);
     setSmartWalletAddress(walletAddress);
+    setLoading(false);
     // addresss
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios.post("http://localhost:8080/api/createUser", {
-      name: userName,
-      email: email,
-      eoa,
-      smartWalletAddress: smartWalletAddress
-    })
-      .then((res) => {
-        console.log(res.data);
-        const token = res.data.token;
-        Cookies.set('token', token);
-        toast.success('User created successfully');
-        setUser(res.data.user)
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 2000);
+    if (smartWalletAddress) {
+      axios.post("http://localhost:8080/api/createUser", {
+        name: userName,
+        email: email,
+        eoa,
+        smartWalletAddress: smartWalletAddress
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          console.log(res.data);
+          const token = res.data.token;
+          Cookies.set('token', token);
+          toast.success('User created successfully');
+          setUser(res.data.user)
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 2000);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    else{
+      toast.error('Please generate smart wallet address');
+    }
   };
 
   if (!eoa) {
@@ -146,6 +152,14 @@ export default function Signup() {
                 value={eoa}
               />
             </div>
+            <div>
+              <label htmlFor="password" className="sr-only">Wallet Address</label>
+              <input
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                placeholder="Smart WalletAddress"
+                value={smartWalletAddress}
+              />
+            </div>
           </div>
           {
             smartWalletAddress ? (<div>
@@ -156,12 +170,12 @@ export default function Signup() {
                 Sign Up
               </button>
             </div>) : (
-                <div>
+              <div>
                 <button
                   onClick={createAccountAddress}
                   className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  Generate Smart wallet address
+                  <span>{loading ? ('Generating Smart Wallet Addte....') : ('Generate Smart Address')} </span>
                 </button>
               </div>
             )

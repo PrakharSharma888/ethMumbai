@@ -16,8 +16,12 @@ const createContract = async (req, res) => {
 
 const CreateMusicNFTContract = async (req, res) => {
     try {
-        const {trackName, artistName, albumName, genre, year, userId} = req.body;
-        res.status(201).json({ trackName, artistName, albumName, genre, year, userId });
+        const {trackName, artistName, userID, contractAddress} = req.body;
+        const contract = await MusicNFTContract.create({trackName, artistName, userID, contractAddress});
+        res.status(201).json({ 
+            contract,
+            message: "Music NFT Contract Created"
+        });
     } catch (error) {
         res.status(400).json({ error: error.message });
     } 
@@ -26,8 +30,7 @@ const CreateMusicNFTContract = async (req, res) => {
 const getContracts = async (req, res) => {
     try {
         const {userId} = req.body;
-        console.log(userId);
-        const contracts = await Contract.find({ userId: userId });
+        const contracts = await MusicNFTContract.find({ userId: userId });
         res.status(200).json({ contracts });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -37,7 +40,8 @@ const getContracts = async (req, res) => {
 
 const SingleContract = async (req, res) => {
     try {
-        const contract = await Contract.findById(req.params.id);
+        const contract = await MusicNFTContract.findById(req.params.id);
+        console.log(req.params.id);
         res.status(200).json({ contract });
     } catch (error) {
         res.status(400).json({ error: error.message });

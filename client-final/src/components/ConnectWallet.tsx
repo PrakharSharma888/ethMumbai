@@ -70,7 +70,7 @@ const ConnectWallet = () => {
         <div>
             <Toaster />
 
-            <button onClick={connectWallet} className='bg-white border-[1px] border-white p-2 rounded-lg flex gap-2'>
+            <button onClick={connectWallet} className='bg-white text-black border-[1px] border-white p-2 rounded-lg flex gap-2'>
                 <WalletMinimal />
                 <span> Connect Wallet </span>
             </button>

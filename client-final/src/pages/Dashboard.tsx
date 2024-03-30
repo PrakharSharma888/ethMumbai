@@ -56,6 +56,8 @@ const Dashboard = () => {
   const [showTemplate, setShowTemplate] = useState("new-template");
   const [templates, setTemplates] = useState([])
 
+  const [createdTemplates, setCreatedTemplates] = useState([])
+
   const toggleTemplate = () => {
     if (showTemplate === "new-template") {
       setShowTemplate("already-created-template");
@@ -65,14 +67,19 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:8080/template/getAll")
+    axios.post("http://localhost:8080/contract/getContracts", {
+      userID: user._id
+    })
       .then((res) => {
-        setTemplates(res.data.allTemplates)
+        setCreatedTemplates(res.data.contracts)
       })
       .catch((err) => {
         console.log(err)
       })
   }, [])
+
+
+  console.log('rdcs', createdTemplates)
 
   console.log(user)
 
@@ -178,7 +185,7 @@ const Dashboard = () => {
         ) : (
           <div className="grid grid-cols-2 gap-10 ">
             {
-              templates.map((template) => {
+              createdTemplates.map((template) => {
                 return (
                   <div className="flex flex-col gap-3 justify-centerc items-center py-10 border-[0.5px] bg-white text-black border-gray-400 rounded-2xl">
                     <div className='flex justify-center'>
@@ -186,11 +193,16 @@ const Dashboard = () => {
                     </div>
                     <div className="flex flex-col justify-center text-center">
                       <span className="text-xl font-semibold">
-                        {template.templateName}
+                        {template.artistName}
                       </span>
                       <span className="text-xs text-gray-500">
-                        {template.templateDescription}
+                        {template.contractAddress}
                       </span>
+                      <div>
+                        {
+                          template.trackName
+                        }
+                      </div>
                     </div>
 
                     <Link to={`/contract/${template._id}`} className="bg-black w-full px-10 text-white text-center py-3 rounded-sm cursor-pointer"> Interact With this contract </Link>

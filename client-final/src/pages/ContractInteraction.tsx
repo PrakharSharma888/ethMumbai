@@ -1,27 +1,48 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import CodeEditor from '../components/CodeEditor';
+import axios from 'axios';
 
 const ContractInteraction = () => {
   let { id } = useParams();
+  const [contractData, setContractData] = useState({})
 
+  useEffect(() => {
+    const fetchContractData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/contract/singleContract/${id}`);
+        setContractData(response.data.contract);
+      } catch (error) {
+        console.error('Error fetching contract data:', error);
+      }
+    };
+
+    fetchContractData();
+  }, [id])
+
+  console.log('Contract Data:', contractData);
 
   return (
-    <div className='p-5 flex flex-col justify-around h-[90vh] gap-5'>
-      {/* ID : {id} */}
+    <div className='p-5 flex flex-col justify-around h-[90vh] gap-5 mt-40'>
+      ID : {id}
 
 
       <div>
         <div className='text-2xl font-semibold'>
-          Music Albums
+          Artist : {contractData.artistName}
         </div>
         <div className='text-sm text-gray-600'>
-          THis is a contract description
+          Track Name : {contractData.trackName}
         </div>
       </div>
 
       <div>
-        Contract Information : ERC 721
+        <div className='text-2xl font-semibold'>
+          Contract Address : {contractData.contractAddress}
+        </div>
+        <div className='text-sm text-gray-600'>
+          Contract Name : {contractData.userID}
+        </div>
       </div>
 
       <div className='px-5 grid grid-cols-3 gap-5 h-1/2'>
