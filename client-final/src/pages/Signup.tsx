@@ -55,7 +55,7 @@ export default function Signup() {
   const createAccountAddress = async (
   ) => {
     setLoading(true);
-    const address = [eoa.toString()]; // to be added
+    const address = [eoa.toString()];
     console.log("Address: ", address);
     let owners: string[] = [];
     let salt: string;
@@ -68,6 +68,7 @@ export default function Signup() {
     await smartWalletAddress.wait();
     const walletAddress = await getWalletAddress(owners, salt);
     setSmartWalletAddress(walletAddress);
+    alert("Smart Wallet Address: " + walletAddress);
     setLoading(false);
     // addresss
   };
