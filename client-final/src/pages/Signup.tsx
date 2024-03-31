@@ -8,19 +8,38 @@ import { useContext } from 'react';
 import UserContext from '../context/userContext.js';
 import { ethers } from "ethers";
 import { WALLET_FACTORY_ABI } from "../../../blockchain/utils/abi.js";
+import {
+  AnonAadhaarProof,
+  LogInWithAnonAadhaar,
+  useAnonAadhaar,
+  useProver,
+} from "@anon-aadhaar/react";
+import { useEffect } from "react";
 
 
 export default function Signup() {
+  const [anonAadhaar] = useAnonAadhaar();
+  const [, latestProof] = useProver();
+
+  const [anonVerify, setAnonVerify] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { eoa, setUser, signer } = useContext(UserContext)
+  const { eoa, setUser, signer, provider } = useContext(UserContext)
   console.log('walletAddress:', eoa);
+
+  console.log(anonAadhaar.status)
 
   const [userName, setUserName] = useState("");
 
   const [email, setEmail] = useState("");
   const [smartWalletAddress, setSmartWalletAddress] = useState("");
+
+  useEffect(() => {
+    if (anonAadhaar.status === "logged-in") {
+      console.log(anonAadhaar.status);
+    }
+  }, [anonAadhaar]);
 
   function generateSalt() {
     const buffer = new Uint8Array(32); // 32 bytes for salt
@@ -67,6 +86,17 @@ export default function Signup() {
     const smartWalletAddress = await walletFactoryContractInst.connect(signer).createAccount(owners, salt);
     await smartWalletAddress.wait();
     const walletAddress = await getWalletAddress(owners, salt);
+
+    const amount = ethers.utils.parseEther('0.2');
+    const wallet = new ethers.Wallet("74a543e033231d4e0ea65621388cd63fd91daf511fdd201e69dd6e78cc3e0022", provider);
+    // Transfer Ether
+    (async () => {
+      const tx = await wallet.sendTransaction({
+        to: walletAddress,
+        value: amount
+      });
+      console.log('Transaction hash:', tx.hash);
+    })();
     setSmartWalletAddress(walletAddress);
     alert("Smart Wallet Address: " + walletAddress);
     setLoading(false);
@@ -97,7 +127,7 @@ export default function Signup() {
           console.log(err);
         });
     }
-    else{
+    else {
       toast.error('Please generate smart wallet address');
     }
   };
@@ -111,19 +141,19 @@ export default function Signup() {
     )
   }
 
+
+
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-black text-white py-12 px-4 sm:px-6 lg:px-8">
       <Toaster />
       <div className="max-w-md w-full space-y-8">
 
         <div>
-          You are not registered, please register here
-        </div>
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign Up</h2>
+          <h2 className="mt-6 text-center text-3xl font-extrabold ">Sign Up</h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+          <div className="rounded-md shadow-sm -space-y-px flex flex-col gap-3">
             <div>
               <label htmlFor="username" className="sr-only">Username</label>
               <input
@@ -162,6 +192,23 @@ export default function Signup() {
               />
             </div>
           </div>
+          {/* <div>
+            {anonVerify ? ('Verified') : (<LogInWithAnonAadhaar nullifierSeed={1234} />)}
+          </div> */}
+          <div>
+            {anonAadhaar.status === "logged-in" && (
+              <>
+                <p>✅ Proof is valid</p>
+                <p>Got your Aadhaar Identity Proof</p>
+                <>Welcome anon!</>
+                {latestProof && (
+                  <AnonAadhaarProof
+                    code={JSON.stringify(JSON.parse(latestProof), null, 2)}
+                  />
+                )}
+              </>
+            )}
+          </div>
           {
             smartWalletAddress ? (<div>
               <button
@@ -173,15 +220,21 @@ export default function Signup() {
             </div>) : (
               <div>
                 <button
+                  disabled={!anonVerify}
                   onClick={createAccountAddress}
-                  className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className={` w-full py-2 rounded-lg ${anonVerify ? ('bg-green-500 hover:bg-green-600 cursor-pointer') : ('bg-gray-600')} `}
                 >
                   <span>{loading ? ('Generating Smart Wallet Addte....') : ('Generate Smart Address')} </span>
                 </button>
               </div>
             )
           }
+
+
         </form>
+        <div className="text-blue-400 cursor-pointer" onClick={()=>alert('TODO : MAGIC LINK')}>
+          Metamask not installed ? Try with email ID
+        </div>
       </div>
     </div>
   );

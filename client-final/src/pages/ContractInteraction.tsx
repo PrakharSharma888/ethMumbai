@@ -22,7 +22,7 @@ const ContractInteraction = () => {
     const fetchContractData = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/contract/singleContract/${id}`);
-        console.log("------------------------",response.data.contract);
+        console.log("------------------------", response.data.contract);
         setContractData(response.data.contract);
       } catch (error) {
         console.error('Error fetching contract data:', error);
@@ -167,7 +167,7 @@ const ContractInteraction = () => {
     }
   }
   const tokenContract = new ethers.Contract(
-   "0xC362d107AC478BA282B64A511cBFF1322E864cDD", // DB se lana h ye
+    "0xC362d107AC478BA282B64A511cBFF1322E864cDD", // DB se lana h ye
     ERC721_CONTRACT_ABI,
     provider
   );
@@ -280,7 +280,7 @@ const ContractInteraction = () => {
   };
 
   const mint = async () => {
-    console.log("Dataaaaaaaaaa",receiverAddress);
+    console.log("Dataaaaaaaaaa", receiverAddress);
     const builder = await builderForTransaction(
       user.smartWalletAddress, // smart contract Add
       contractData.contractAddress, // reciver 0x1B118972177a40C353Db070e0e34763D62ee09be
@@ -299,7 +299,7 @@ const ContractInteraction = () => {
 
     const transactionReceipt = await receipt?.getTransactionReceipt();
     console.log("Transaction Receipt:", transactionReceipt?.transactionHash);
-    alert("Burned Successfully " +  transactionReceipt?.transactionHash)
+    alert("Burned Successfully " + transactionReceipt?.transactionHash)
   }
 
   const burn = async () => {
@@ -329,52 +329,43 @@ const ContractInteraction = () => {
   console.log('Contract Data:', contractData);
 
   return (
-    <div className='p-5 flex flex-col justify-around h-[90vh] gap-5 mt-40'>
-      ID: {id}
-
-      <div>
-        <div className='text-2xl font-semibold'>
-          Artist: {contractData.artistName}
-        </div>
-        <div className='text-sm text-gray-600'>
-          Track Name: {contractData.trackName}
-        </div>
-      </div>
-
+    <div className='p-5 flex flex-col justify-around h-fit gap-5 mt-20 bg-black text-white'>
       <div>
         <div className='text-2xl font-semibold'>
           Contract Address: {contractData.contractAddress}
         </div>
-        <div className='text-sm text-gray-600'>
-          Contract Name: {contractData.userID}
-        </div>
+
       </div>
 
-      <div className='px-5 grid grid-cols-3 gap-5 h-1/2'>
-        <div className='bg-gray-100 h-full rounded-xl flex flex-col justify-center items-center gap-4'>
-          <span className='text-xl font-bold'>Minting</span>
-          <div className='flex flex-col items-center'>
-            <label htmlFor='recipient' className='mb-1'>Send to:</label>
-            <input type='text' id='recipient' onChange={(e) => setReceiverAddress(e.target.value)} className='border border-gray-300 rounded-md p-1' />
+      <div className='px-5 grid grid-cols-2 gap-5 h-1/2'>
+        <div className='bg-gray-900 text-white py-5 h-full rounded-xl flex flex-col justify-center items-center gap-4'>
+          <span className='text-xl font-bold '>Minting</span>
+          <div className='w-full px-10 flex flex-col gap-5'>
+            <div className='flex flex-col items-center'>
+              <label htmlFor='recipient' className='mb-1 text-gray-300'>Send to:</label>
+              <input type='text' id='recipient' onChange={(e) => setReceiverAddress(e.target.value)} className='border border-gray-700 rounded-md w-full p-1 bg-gray-800 text-white focus:outline-none' />
+            </div>
+            <div className='flex flex-col items-center mb-2'>
+              <label htmlFor='amount' className='mb-1 text-gray-300'>Metadata</label>
+              <input type='text' id='amount' onChange={(e) => setAmount(e.target.value)} className='border border-gray-700 rounded-md p-1 w-full bg-gray-800 text-white focus:outline-none' />
+            </div>
+            <button onClick={mint} className='bg-green-800 mt-5 hover:bg-green-700 text-white w-full py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900'>
+              Mint
+            </button>
           </div>
-          <div className='flex flex-col items-center mb-2'>
-            <label htmlFor='amount' className='mb-1'>Metadata</label>
-            <input type='string' id='amount' onChange={(e) => setAmount(e.target.value)} className='border border-gray-300 rounded-md p-1 w-full' />
-          </div>
-          <button className='bg-black text-white w-1/2 py-3 rounded-lg' onClick={mint}>Send</button>
         </div>
 
-        <div className='bg-gray-100 h-full rounded-xl flex justify-center items-center'>
-          <span className='text-xl font-bold'>Deleting</span>
-          <div className='flex flex-col items-center mb-2'>
-            <label htmlFor='burnAmount' className='mb-1'>Burn Amount:</label>
-            <input type='number' id='burnAmount' onChange={(e) => setBurnId(e.target.value)} className='border border-gray-300 rounded-md p-1 w-full' />
+        <div className='bg-gray-900 flex flex-col text-white py-5 h-full gap-4 rounded-xl justify-center items-center'>
+          <div className='w-full h-full flex justify-between flex-col px-10'>
+            <span className='text-xl font-bold'>Deleting</span>
+            <div className='flex flex-col'>
+              <div className='mb-1 text-gray-300'>Burn Amount:</div>
+              <input type='number' id='burnAmount' onChange={(e) => setBurnId(e.target.value)} className='border border-gray-700 rounded-md p-1 w-full bg-gray-800 text-white focus:outline-none' />
+            </div>
+            <button className='bg-green-800 mt-5 hover:bg-green-700 text-white w-full py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-900'>
+              Burn
+            </button>
           </div>
-          <button className='bg-black text-white w-1/2 py-3 rounded-lg' onClick={burn}>Burn</button>
-        </div>
-
-        <div className='bg-gray-100 h-full rounded-xl flex justify-center items-center'>
-          Placeholder for third column
         </div>
       </div>
 

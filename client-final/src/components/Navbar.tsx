@@ -39,7 +39,7 @@ const Navbar = () => {
 
     }
     return (
-        <div className='flex justify-between px-10 py-4 items-center bg-black text-white'>
+        <div className='flex justify-between px-10 py-4 items-center bg-black text-white '>
             <Link to={'/'}>
                 <img src={Logo} alt='logo' className='h-8' />
             </Link>
